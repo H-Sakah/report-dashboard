@@ -25,7 +25,7 @@
 ```bash
 # 1. Repository klonen
 git clone https://github.com/H-Sakah/report-dashboard.git
-cd repo-dashboard
+cd report-dashboard
 
 # 2. Abhängigkeiten installieren
 npm install
