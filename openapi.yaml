@@ -1,0 +1,172 @@
+openapi: 3.0.3
+info:
+  title: Report API
+  description: Schnittstelle zum Abrufen von Reports und CSV-Dateien
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Lokaler Entwicklungsserver
+
+paths:
+  /reports:
+    get:
+      summary: Liste der Reports abrufen
+      operationId: getReports
+      parameters:
+        - name: reportType
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [umsatz, kunden, lager, finanzen, auftraege]
+          description: Typ des Reports
+        - name: from
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Startdatum (YYYY-MM-DD)
+        - name: to
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Enddatum (YYYY-MM-DD)
+      responses:
+        "200":
+          description: Erfolgreich — Liste der Reports
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Report"
+              example:
+                - id: "RPT-001"
+                  name: "Umsatzbericht Januar 2024"
+                  reportType: "umsatz"
+                  createdAt: "2024-01-31"
+                - id: "RPT-002"
+                  name: "Umsatzbericht Februar 2024"
+                  reportType: "umsatz"
+                  createdAt: "2024-02-29"
+        "400":
+          description: Ungültige Parameter
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Serverfehler
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /reports/{reportId}/files:
+    get:
+      summary: CSV-Dateien eines Reports abrufen (als ZIP)
+      operationId: getReportFiles
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID des Reports
+      responses:
+        "200":
+          description: Erfolgreich — ZIP-Datei mit CSV-Dateien
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Report nicht gefunden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Serverfehler
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /reports/{reportId}/files/{fileId}/download:
+    get:
+      summary: Eine einzelne CSV-Datei herunterladen
+      operationId: downloadFile
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Erfolgreich — CSV-Datei
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Datei nicht gefunden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Report:
+      type: object
+      required: [id, name, reportType, createdAt]
+      properties:
+        id:
+          type: string
+          example: "RPT-001"
+        name:
+          type: string
+          example: "Umsatzbericht Januar 2024"
+        reportType:
+          type: string
+          enum: [umsatz, kunden, lager, finanzen, auftraege]
+          example: "umsatz"
+        createdAt:
+          type: string
+          format: date
+          example: "2024-01-31"
+
+    CsvFile:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+          example: "FILE-001"
+        name:
+          type: string
+          example: "umsatz_januar_2024.csv"
+
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: "Ungültige Parameter"
