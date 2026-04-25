@@ -39,10 +39,36 @@ npm run dev
 
 ## Migration zum echten Backend
 
-Sobald ein echtes Backend vorhanden ist, sind nur drei Schritte nötig:
+Sobald das Backend [report-backend](https://github.com/H-Sakah/report-backend) geklont wurde, sind nur drei Schritte nötig:
 
-1. `src/mocks/` Ordner entfernen
-2. MSW-Initialisierung aus `main.tsx` entfernen
-3. `BASE_URL` in `apiService.ts` auf die echte API-URL setzen
+### 1. MSW deaktivieren in `src/main.tsx`
 
-Der restliche Code bleibt unverändert.
+```typescript
+// ALT — MSW aktiv
+async function enableMocking() {
+  if (import.meta.env.MODE !== "development") {
+    return;
+  }
+  const { worker } = await import("./mocks/browser");
+  return worker.start({
+    onUnhandledRequest: "bypass",
+  });
+}
+
+// NEU — MSW deaktiviert
+async function enableMocking() {
+  return;
+}
+```
+
+### 2. Backend URL prüfen in `src/services/apiService.ts`
+
+```typescript
+const BASE_URL = "http://localhost:8080/api/v1";
+```
+
+### 3. Backend starten
+
+```bash
+./gradlew bootRun
+```
