@@ -1,7 +1,6 @@
-// handlers.ts
 import { http, HttpResponse } from "msw";
 
-const BASE_URL = "http://localhost:8080/api/v1";
+const BASE_URL = "*/api/v1";
 
 export const handlers = [
   // GET /reports
