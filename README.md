@@ -1,73 +1,94 @@
 # Report Dashboard
 
-> Dieses Projekt dient als öffentliches Beispiel eines Reporting-Dashboards,
-> das ich in ähnlicher Form während meiner Tätigkeit bei der **R+V Versicherung** entwickelt habe.
-> Es zeigt den grundlegenden Aufbau, die Komponentenstruktur und die REST-Anbindung —
-> ohne interne oder vertrauliche Daten des Unternehmens.
+Frontend dashboard for retrieving and downloading reports through REST APIs.
+
+This project is a public showcase inspired by a similar reporting dashboard I worked on during my time at R+V Versicherung.  
+It demonstrates the overall architecture, frontend structure and REST integration without exposing any internal or confidential company data.
+
+---
 
 ## Features
 
-- Reporttyp und Zeitraum über eine Filterleiste auswählen
-- Reports dynamisch von einer REST-Schnittstelle abrufen
-- CSV-Dateien eines Reports anzeigen
-- CSV-Dateien direkt herunterladen
+- Filter reports by report type and date range
+- Dynamically retrieve reports from a REST API
+- Display CSV files belonging to a report
+- Download CSV files directly
+- Mock API integration using MSW
+- OpenAPI-based API documentation
+
+---
 
 ## Tech Stack
 
-- **React** mit TypeScript
-- **Tailwind CSS** für das Styling
-- **MSW (Mock Service Worker)** für die API-Simulation im Browser ohne Backend
-- **Vite** als schnelles Build-Tool und Dev-Server
-- **OpenAPI 3.0** zur API-Dokumentation
+- React
+- TypeScript
+- Tailwind CSS
+- Vite
+- MSW (Mock Service Worker)
+- OpenAPI 3.0
 
-## Installation
+---
+
+## Project Structure
+
+```txt
+src/
+ ├── components/
+ ├── services/
+ ├── mocks/
+ └── pages/
+```
+
+---
+
+## Local Setup
+
+### 1. Clone repository
 
 ```bash
-# 1. Repository klonen
 git clone https://github.com/H-Sakah/report-dashboard.git
 cd report-dashboard
+```
 
-# 2. Abhängigkeiten installieren
+### 2. Install dependencies
+
+```bash
 npm install
+```
 
-# 3. MSW Service Worker generieren
+### 3. Generate MSW service worker
+
+```bash
 npx msw init public/ --save
+```
 
-# 4. Entwicklungsserver starten
+### 4. Start development server
+
+```bash
 npm run dev
 ```
 
-## Migration zum echten Backend
+---
 
-Sobald das Backend [report-backend](https://github.com/H-Sakah/report-backend) geklont wurde, sind nur drei Schritte nötig:
+## Backend Integration
 
-### 1. MSW deaktivieren in `src/main.tsx`
+After cloning the `report-backend` repository:
 
-```typescript
-// ALT — MSW aktiv
-async function enableMocking() {
-  if (import.meta.env.MODE !== "development") {
-    return;
-  }
-  const { worker } = await import("./mocks/browser");
-  return worker.start({
-    onUnhandledRequest: "bypass",
-  });
-}
+### 1. Disable MSW in `src/main.tsx`
 
-// NEU — MSW deaktiviert
+```ts
 async function enableMocking() {
   return;
 }
 ```
 
-### 2. Backend URL prüfen in `src/services/apiService.ts`
+### 2. Verify backend URL in `src/services/apiService.ts`
 
-```typescript
+```ts
 const BASE_URL = "http://localhost:8080/api/v1";
 ```
 
-### 3. Backend starten
+### 3. Start backend
 
 ```bash
 ./gradlew bootRun
