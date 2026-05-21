@@ -23,9 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-# MSW
-public/mockServiceWorker.js
-
 # Environment variables
 .env
 .env.local
