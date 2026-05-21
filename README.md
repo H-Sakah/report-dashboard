@@ -7,6 +7,10 @@ It demonstrates the overall architecture, frontend structure and REST integratio
 
 ---
 
+## Live Demo
+
+[Open Live Demo](https://report-dashboard-liart.vercel.app/)
+
 ## Preview
 
 ![Dashboard Preview](./src/assets/screenshots/dashboard.png)
