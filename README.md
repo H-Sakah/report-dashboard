@@ -7,6 +7,10 @@ It demonstrates the overall architecture, frontend structure and REST integratio
 
 ---
 
+## Preview
+
+![Dashboard Preview](./src/assets/screenshots/dashboard.png)
+
 ## Features
 
 - Filter reports by report type and date range

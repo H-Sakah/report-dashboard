@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
 
-async function enableMocking() {
+/* async function enableMocking() {
   if (import.meta.env.MODE !== "development") {
     return;
   }
@@ -13,6 +13,10 @@ async function enableMocking() {
   return worker.start({
     onUnhandledRequest: "bypass",
   });
+} */
+
+async function enableMocking() {
+  return;
 }
 
 enableMocking().then(() => {
